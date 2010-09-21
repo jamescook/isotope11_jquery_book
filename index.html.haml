@@ -1,0 +1,48 @@
+= render :partial => "layouts/left"
+#center-window
+  #top
+  #middle
+    #page-top
+      #page-name
+        = 'Accessories'
+      .focus-cont.form-container.search-form
+        -form_for @search, :url => components_path, :html => {:id => "components-search-form"} do |f|
+          = f.label :item_number, "Item Number"
+          = text_field_tag :item_number_is, params[:item_number_is]
+          %p
+            = f.label :year, "Year"
+            = select_tag "vehicle_year",      options_for_select([[]] + @years.collect{|x| x}.uniq, params[:vehicle_year])
+            = f.label :year, "Make"
+            = select_tag "vehicle_make_name", options_for_select([[]] + @vehicles.collect{|x| [x.make_name]}.uniq, params[:vehicle_make_name])
+            = f.label :year, "Model"
+            = select_tag "vehicle_model_name", options_for_select([[]] +  @vehicles.collect{|x| [x.model_name]}.uniq, params[:vehicle_model_name])
+            = f.submit "Submit"
+    #my-vehicles
+      = will_paginate @components
+      %table.subuded.full_width#components-table
+        %thead
+          %tr
+            %th Item Number
+            %th Part Description
+            %th Part Brand
+            %th Jobber Price
+            %th MSRP Price
+        %tfoot
+          %tr
+            %th Item Number
+            %th Part Description
+            %th Part Brand
+            %th Jobber Price
+            %th MSRP Price
+        %tbody.data-section
+          - @components.each do |component|
+            %tr.data
+              %td= component.item_number
+              %td= component.component_class.description
+              %td= component.component_brand.name
+              %td= component.jobber_price
+              %td= component.msrp_price
+            .bottom
+  #bottom
+= render :partial => "layouts/right"
+= javascript_include_tag "component_picker.js"
